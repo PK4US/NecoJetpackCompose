@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.pk4us.necojetpackcompose.components.L8_ItemRowModel
 import com.pk4us.necojetpackcompose.components.MyL1Text
 import com.pk4us.necojetpackcompose.components.MyL2ColumnRow
 import com.pk4us.necojetpackcompose.components.MyL3CardBoxImage
@@ -19,6 +20,7 @@ import com.pk4us.necojetpackcompose.components.MyL4Modifier
 import com.pk4us.necojetpackcompose.components.MyL5State
 import com.pk4us.necojetpackcompose.components.MyL6LazyColumn
 import com.pk4us.necojetpackcompose.components.MyL7LazyRowAndDataClass
+import com.pk4us.necojetpackcompose.components.MyL8TextExpand
 import com.pk4us.necojetpackcompose.components.listItem
 import com.pk4us.necojetpackcompose.ui.theme.MyDefaultMaterialTheme
 
@@ -37,7 +39,8 @@ class MainActivity : ComponentActivity() {
 //                        MyL4Modifier()
 //                        MyL5State()
 //                        MyL6LazyColumn()
-                        MyL7LazyRowAndDataClass()
+//                        MyL7LazyRowAndDataClass()
+                        MyL8TextExpand()
                     }
                 }
             }
