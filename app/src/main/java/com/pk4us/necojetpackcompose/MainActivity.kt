@@ -18,6 +18,7 @@ import com.pk4us.necojetpackcompose.components.MyL3CardBoxImage
 import com.pk4us.necojetpackcompose.components.MyL4Modifier
 import com.pk4us.necojetpackcompose.components.MyL5State
 import com.pk4us.necojetpackcompose.components.MyL6LazyColumn
+import com.pk4us.necojetpackcompose.components.MyL7LazyRowAndDataClass
 import com.pk4us.necojetpackcompose.components.listItem
 import com.pk4us.necojetpackcompose.ui.theme.MyDefaultMaterialTheme
 
@@ -35,7 +36,8 @@ class MainActivity : ComponentActivity() {
 //                        MyL3CardBoxImage()
 //                        MyL4Modifier()
 //                        MyL5State()
-                        MyL6LazyColumn()
+//                        MyL6LazyColumn()
+                        MyL7LazyRowAndDataClass()
                     }
                 }
             }
