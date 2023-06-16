@@ -10,7 +10,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.pk4us.necojetpackcompose.ui.theme.MyDefaultMaterialTheme
+import com.pk4us.necojetpackcompose.weather.screen.MainCard
 import com.pk4us.necojetpackcompose.weather.screen.MainScreen
+import com.pk4us.necojetpackcompose.weather.screen.TabLayout
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,7 @@ class MainActivity : ComponentActivity() {
 //                        MyL7LazyRowAndDataClass()
 //                        MyL8TextExpand()
 //                        Greeting("Bali", context = this@MainActivity)
+
                         MainScreen()
                     }
                 }
