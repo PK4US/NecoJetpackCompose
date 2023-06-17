@@ -3,6 +3,7 @@ package com.pk4us.necojetpackcompose.weather.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -19,9 +20,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import com.pk4us.necojetpackcompose.R
 import com.pk4us.necojetpackcompose.ui.theme.BlueLight
+import com.pk4us.necojetpackcompose.weather.data.WeatherModel
 import kotlinx.coroutines.launch
 
 @Preview
@@ -41,7 +46,6 @@ fun MainScreen() {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
 fun MainCard() {
     Column(
@@ -135,7 +139,7 @@ fun MainCard() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout(){
+fun TabLayout() {
     val tabList = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState()
     val tabIndex = pagerState.currentPage
@@ -159,7 +163,7 @@ fun TabLayout(){
             backgroundColor = BlueLight,
             contentColor = Color.White
         ) {
-            tabList.forEachIndexed{index, text ->
+            tabList.forEachIndexed { index, text ->
                 Tab(
                     selected = false,
                     onClick = {
@@ -177,16 +181,37 @@ fun TabLayout(){
             count = tabList.size,
             state = pagerState,
             modifier = Modifier.weight(1.0f)
-        ) {
-                index ->
+        ) { index ->
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
-            ){
-                items(15){
-                    ListItem()
+            ) {
+                itemsIndexed(
+                    listOf(
+                        WeatherModel(
+                            "London",
+                            "10:00",
+                            "25ºC",
+                            "Sunny",
+                            "//cdn.weatherapi.com/weather/64x64/day/176.png",
+                            "",
+                            "",
+                            ""
+                        ),
+                        WeatherModel(
+                            "London",
+                            "26/07/2022",
+                            "",
+                            "Sunny",
+                            "//cdn.weatherapi.com/weather/64x64/day/176.png",
+                            "26º",
+                            "12º",
+                            "xdfghxdfthxfghxdft"
+                        )
+                    )
+                ) { index, item ->
+                    ListItem(item)
                 }
             }
-
         }
     }
 }
