@@ -2,6 +2,7 @@ package com.pk4us.necojetpackcompose.weather.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -50,8 +51,7 @@ fun MainCard() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             backgroundColor = BlueLight,
-            elevation = 0.dp,
-            shape = RoundedCornerShape(10.dp)
+            elevation = 0.dp
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -135,7 +135,7 @@ fun MainCard() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout() {
+fun TabLayout(){
     val tabList = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState()
     val tabIndex = pagerState.currentPage
@@ -159,7 +159,7 @@ fun TabLayout() {
             backgroundColor = BlueLight,
             contentColor = Color.White
         ) {
-            tabList.forEachIndexed { index, text ->
+            tabList.forEachIndexed{index, text ->
                 Tab(
                     selected = false,
                     onClick = {
@@ -177,7 +177,15 @@ fun TabLayout() {
             count = tabList.size,
             state = pagerState,
             modifier = Modifier.weight(1.0f)
-        ) { index ->
+        ) {
+                index ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ){
+                items(15){
+                    ListItem()
+                }
+            }
 
         }
     }
