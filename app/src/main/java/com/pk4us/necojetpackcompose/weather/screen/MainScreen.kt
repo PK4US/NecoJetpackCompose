@@ -47,7 +47,21 @@ fun MainScreen() {
     val daysList = remember {
         mutableStateOf(listOf<WeatherModel>())
     }
-    getData("London", LocalContext.current, daysList)
+    val currentDay = remember {
+        mutableStateOf(
+            WeatherModel(
+                "",
+                "",
+                "0.0",
+                "",
+                "",
+                "0.0",
+                "0.0",
+                ""
+            )
+        )
+    }
+    getData("London", LocalContext.current, daysList, currentDay)
     Image(
         painter = painterResource(
             id = R.drawable.weather_bg
@@ -59,12 +73,16 @@ fun MainScreen() {
         contentScale = ContentScale.FillBounds
     )
     Column {
-        MainCard()
+        MainCard(currentDay)
         TabLayout(daysList)
     }
 }
 
-private fun getData(city: String, context: Context, daysList: MutableState<List<WeatherModel>>) {
+private fun getData(
+    city: String, context: Context,
+    daysList: MutableState<List<WeatherModel>>,
+    currentDay: MutableState<WeatherModel>
+) {
     val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY" +
             "&q=$city" +
             "&days=" +
@@ -76,6 +94,7 @@ private fun getData(city: String, context: Context, daysList: MutableState<List<
         url,
         { response ->
             val list = getWeatherByDays(response)
+            currentDay.value = list[0]
             daysList.value = list
         },
         {
@@ -86,7 +105,7 @@ private fun getData(city: String, context: Context, daysList: MutableState<List<
 }
 
 @Composable
-fun MainCard() {
+fun MainCard(currentDay: MutableState<WeatherModel>) {
     Column(
         modifier = Modifier
             .padding(5.dp)
@@ -105,7 +124,7 @@ fun MainCard() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "20 Jun 2022 13:00",
+                        text = currentDay.value.time,
                         modifier = Modifier.padding(
                             top = 8.dp,
                             start = 8.dp
@@ -114,7 +133,7 @@ fun MainCard() {
                         color = Color.White
                     )
                     AsyncImage(
-                        model = "https://cdn.weatherapi.com/weather/64x64/day/116.png",
+                        model = "https:" + currentDay.value.icon,
                         contentDescription = "im2",
                         modifier = Modifier
                             .padding(
@@ -125,17 +144,17 @@ fun MainCard() {
                     )
                 }
                 Text(
-                    text = "Madrid",
+                    text = currentDay.value.city,
                     style = TextStyle(fontSize = 24.sp),
                     color = Color.White
                 )
                 Text(
-                    text = "23ºC",
+                    text = currentDay.value.currentTemp.toFloat().toInt().toString() + "ºC",
                     style = TextStyle(fontSize = 65.sp),
                     color = Color.White
                 )
                 Text(
-                    text = "Sunny",
+                    text = currentDay.value.condition,
                     style = TextStyle(fontSize = 16.sp),
                     color = Color.White
                 )
@@ -155,7 +174,9 @@ fun MainCard() {
                         )
                     }
                     Text(
-                        text = "23ºC/12ºC",
+                        text = "${
+                            currentDay.value.maxTemp.toFloat().toInt()
+                        }ºC/${currentDay.value.minTemp.toFloat().toInt()}ºC",
                         style = TextStyle(fontSize = 16.sp),
                         color = Color.White
                     )
