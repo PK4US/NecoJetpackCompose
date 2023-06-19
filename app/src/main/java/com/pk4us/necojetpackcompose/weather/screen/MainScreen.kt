@@ -9,6 +9,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,13 +37,17 @@ import com.pk4us.necojetpackcompose.R
 import com.pk4us.necojetpackcompose.ui.theme.BlueLight
 import com.pk4us.necojetpackcompose.weather.data.WeatherModel
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 const val API_KEY = "3442427ab7b944acb4892702221108"
 
 @Preview
 @Composable
 fun MainScreen() {
-    getData("London", LocalContext.current)
+    val daysList = remember {
+        mutableStateOf(listOf<WeatherModel>())
+    }
+    getData("London", LocalContext.current, daysList)
     Image(
         painter = painterResource(
             id = R.drawable.weather_bg
@@ -53,11 +60,11 @@ fun MainScreen() {
     )
     Column {
         MainCard()
-        TabLayout()
+        TabLayout(daysList)
     }
 }
 
-private fun getData(city: String, context: Context) {
+private fun getData(city: String, context: Context, daysList: MutableState<List<WeatherModel>>) {
     val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY" +
             "&q=$city" +
             "&days=" +
@@ -68,7 +75,8 @@ private fun getData(city: String, context: Context) {
         Request.Method.GET,
         url,
         { response ->
-            Log.d("MyLog", "Response: $response")
+            val list = getWeatherByDays(response)
+            daysList.value = list
         },
         {
             Log.d("MyLog", "VolleyError: $it")
@@ -170,7 +178,7 @@ fun MainCard() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout() {
+fun TabLayout(daysList: MutableState<List<WeatherModel>>) {
     val tabList = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState()
     val tabIndex = pagerState.currentPage
@@ -217,32 +225,43 @@ fun TabLayout() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    listOf(
-                        WeatherModel(
-                            "London",
-                            "10:00",
-                            "25ºC",
-                            "Sunny",
-                            "//cdn.weatherapi.com/weather/64x64/day/176.png",
-                            "",
-                            "",
-                            ""
-                        ),
-                        WeatherModel(
-                            "London",
-                            "26/07/2022",
-                            "",
-                            "Sunny",
-                            "//cdn.weatherapi.com/weather/64x64/day/176.png",
-                            "26º",
-                            "12º",
-                            "xdfghxdfthxfghxdft"
-                        )
-                    )
+                    daysList.value
                 ) { index, item ->
                     ListItem(item)
                 }
             }
         }
     }
+}
+
+private fun getWeatherByDays(response: String): List<WeatherModel> {
+    if (response.isEmpty()) return listOf()
+    val list = ArrayList<WeatherModel>()
+    val mainObject = JSONObject(response)
+    val city = mainObject.getJSONObject("location").getString("name")
+    val days = mainObject.getJSONObject("forecast").getJSONArray("forecastday")
+
+    for (i in 0 until days.length()) {
+        val item = days[i] as JSONObject
+        list.add(
+            WeatherModel(
+                city,
+                item.getString("date"),
+                "",
+                item.getJSONObject("day").getJSONObject("condition")
+                    .getString("text"),
+                item.getJSONObject("day").getJSONObject("condition")
+                    .getString("icon"),
+                item.getJSONObject("day").getString("maxtemp_c"),
+                item.getJSONObject("day").getString("mintemp_c"),
+                item.getJSONArray("hour").toString()
+
+            )
+        )
+    }
+    list[0] = list[0].copy(
+        time = mainObject.getJSONObject("current").getString("last_updated"),
+        currentTemp = mainObject.getJSONObject("current").getString("temp_c"),
+    )
+    return list
 }
