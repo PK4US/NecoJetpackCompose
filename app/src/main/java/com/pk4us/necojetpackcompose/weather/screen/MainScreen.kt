@@ -1,5 +1,7 @@
 package com.pk4us.necojetpackcompose.weather.screen
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,12 +16,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -29,21 +35,46 @@ import com.pk4us.necojetpackcompose.ui.theme.BlueLight
 import com.pk4us.necojetpackcompose.weather.data.WeatherModel
 import kotlinx.coroutines.launch
 
+const val API_KEY = "3442427ab7b944acb4892702221108"
+
 @Preview
 @Composable
 fun MainScreen() {
+    getData("London", LocalContext.current)
     Image(
-        painter = painterResource(id = R.drawable.weather_bg),
+        painter = painterResource(
+            id = R.drawable.weather_bg
+        ),
         contentDescription = "im1",
         modifier = Modifier
             .fillMaxSize()
-            .alpha(0.7f),
+            .alpha(0.5f),
         contentScale = ContentScale.FillBounds
     )
     Column {
         MainCard()
         TabLayout()
     }
+}
+
+private fun getData(city: String, context: Context) {
+    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY" +
+            "&q=$city" +
+            "&days=" +
+            "3" +
+            "&aqi=no&alerts=no"
+    val queue = Volley.newRequestQueue(context)
+    val sRequest = StringRequest(
+        Request.Method.GET,
+        url,
+        { response ->
+            Log.d("MyLog", "Response: $response")
+        },
+        {
+            Log.d("MyLog", "VolleyError: $it")
+        }
+    )
+    queue.add(sRequest)
 }
 
 @Composable
