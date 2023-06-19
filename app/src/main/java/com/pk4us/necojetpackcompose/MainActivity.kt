@@ -1,5 +1,6 @@
 package com.pk4us.necojetpackcompose
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,8 +8,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.pk4us.necojetpackcompose.ui.theme.MyDefaultMaterialTheme
 import com.pk4us.necojetpackcompose.weather.screen.MainCard
 import com.pk4us.necojetpackcompose.weather.screen.MainScreen
@@ -34,7 +38,11 @@ class MainActivity : ComponentActivity() {
 //                        MyL8TextExpand()
 //                        Greeting("Bali", context = this@MainActivity)
 
-                        MainScreen()
+                        val LocalWeatherContext = compositionLocalOf<Context> { error("No LocalWeatherContext provided") }
+                        val context = LocalContext.current
+                        CompositionLocalProvider(LocalWeatherContext provides context) {
+                            MainScreen(context)
+                        }
                     }
                 }
             }

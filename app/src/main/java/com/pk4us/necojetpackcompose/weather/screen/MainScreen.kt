@@ -20,7 +20,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -40,12 +39,15 @@ import org.json.JSONObject
 
 const val API_KEY = "3442427ab7b944acb4892702221108"
 
-@Preview
 @Composable
-fun MainScreen() {
+fun MainScreen(context: Context) {
     val daysList = remember {
         mutableStateOf(listOf<WeatherModel>())
     }
+    val dialogState = remember {
+        mutableStateOf(false)
+    }
+
     val currentDay = remember {
         mutableStateOf(
             WeatherModel(
@@ -60,6 +62,11 @@ fun MainScreen() {
             )
         )
     }
+    if (dialogState.value) {
+        DialogSearch(dialogState, onSubmit = {
+            getData(it, context, daysList, currentDay)
+        })
+    }
     getData("London", LocalContext.current, daysList, currentDay)
     Image(
         painter = painterResource(
@@ -72,7 +79,12 @@ fun MainScreen() {
         contentScale = ContentScale.FillBounds
     )
     Column {
-        MainCard(currentDay)
+        MainCard(currentDay, onClickSync = {
+            getData("London", context, daysList, currentDay)
+        }, onClickSearch = {
+            dialogState.value = true
+        }
+        )
         TabLayout(daysList, currentDay)
     }
 }
@@ -126,7 +138,11 @@ private fun getData(
 }
 
 @Composable
-fun MainCard(currentDay: MutableState<WeatherModel>) {
+fun MainCard(
+    currentDay: MutableState<WeatherModel>,
+    onClickSync: () -> Unit,
+    onClickSearch: () -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(5.dp)
@@ -188,7 +204,7 @@ fun MainCard(currentDay: MutableState<WeatherModel>) {
                 ) {
                     IconButton(
                         onClick = {
-
+                            onClickSearch.invoke()
                         }
                     ) {
                         Icon(
@@ -210,7 +226,7 @@ fun MainCard(currentDay: MutableState<WeatherModel>) {
                     )
                     IconButton(
                         onClick = {
-
+                            onClickSync.invoke()
                         }
                     ) {
                         Icon(
