@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.pk4us.necojetpackcompose.components.L20_bottom_nav.BottomMainScreen
+import com.pk4us.necojetpackcompose.components.L21_top_app_bar.TopBarScreen
 import com.pk4us.necojetpackcompose.ui.theme.MyDefaultMaterialTheme
 import com.pk4us.necojetpackcompose.weather.screen.MainCard
 import com.pk4us.necojetpackcompose.weather.screen.MainScreen
@@ -45,7 +46,8 @@ class MainActivity : ComponentActivity() {
 //                            MainScreen(context)
 //                        }
 
-                        BottomMainScreen()
+//                        BottomMainScreen()
+                        TopBarScreen(applicationContext)
                     }
                 }
             }
