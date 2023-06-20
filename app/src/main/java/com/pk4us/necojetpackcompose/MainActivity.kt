@@ -17,6 +17,7 @@ import com.pk4us.necojetpackcompose.components.L20_bottom_nav.BottomMainScreen
 import com.pk4us.necojetpackcompose.components.L21_top_app_bar.TopBarScreen
 import com.pk4us.necojetpackcompose.components.L22_SnackBar.SnackBarMainScreen
 import com.pk4us.necojetpackcompose.components.L23_DrawerMenu.DrawerMenuScreen
+import com.pk4us.necojetpackcompose.components.L24_Navigation.NavigationScreen
 import com.pk4us.necojetpackcompose.ui.theme.MyDefaultMaterialTheme
 import com.pk4us.necojetpackcompose.weather.screen.MainCard
 import com.pk4us.necojetpackcompose.weather.screen.MainScreen
@@ -51,7 +52,8 @@ class MainActivity : ComponentActivity() {
 //                        BottomMainScreen()
 //                        TopBarScreen(applicationContext)
 //                        SnackBarMainScreen(applicationContext)
-                        DrawerMenuScreen(applicationContext)
+//                        DrawerMenuScreen(applicationContext)
+                        NavigationScreen(applicationContext)
                     }
                 }
             }
